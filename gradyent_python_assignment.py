@@ -24,6 +24,20 @@ def graph_traversal_sum(values_in, connections_in, nodes_start, nodes_end):
 
     # ToDo: Write your code here, calculating the graph traversal sum
 
+    def sink_path(connections_in, node_start, nodes_start, node_end, path=None):
+        path = path if path else [node_start]
+        nodes_length = len(connections_in[node_start])
+        next_node = [x for x in range(0, nodes_length) if connections_in[path[-1], x] == 1 and x not in nodes_start]
+        for node in next_node:
+            if node not in path:
+                path.append(node)
+                if node == node_end:
+                    return path
+                path = sink_path(connections_in, node_start, nodes_start, node_end, path)
+        if not next_node:
+            path = path[:-1]
+        return path
+
     return values
 
 
@@ -48,6 +62,7 @@ class ExampleNetwork1:
     nodes = set(range(0, 10))
     nodes_start = {0, 1, 2, 3}
     nodes_end = {9}
+    values_in = {0: 1, 1: 5, 2: 3, 3: 2}
     connections = np.array([
        # 0  1  2  3  4  5  6  7  8  9
         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],  # 0
