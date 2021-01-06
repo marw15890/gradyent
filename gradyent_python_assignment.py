@@ -22,9 +22,10 @@ def graph_traversal_sum(values_in, connections_in, nodes_start, nodes_end):
     values = values_in.copy()
     connections = connections_in.copy()
 
-    # ToDo: Write your code here, calculating the graph traversal sum
+    # End node
+    node_end = next(iter(nodes_end))
 
-    # This function calculates the path from a given sink to the source
+    # Function to calculate the path from a given sink to the source    
     def sink_path(connections_in, node_start, nodes_start, node_end, path=None, last_junction=None):
         path = path if path else [node_start]
         nodes_length = len(connections_in[node_start])
@@ -44,10 +45,12 @@ def graph_traversal_sum(values_in, connections_in, nodes_start, nodes_end):
             path = path[0:index]
         return path
 
+    # Calculate all paths from sinks to the source
     paths = []
     for node in nodes_start:
         paths.append(sink_path(connections, node, nodes_start, node_end))
 
+    # Function to sum up the node values of all paths in the graph
     def path_sum(connections_in, paths, values_in):
         nodes_length = len(connections_in[0])
         connections_out = np.zeros(shape=(nodes_length, nodes_length))
@@ -56,15 +59,14 @@ def graph_traversal_sum(values_in, connections_in, nodes_start, nodes_end):
                 if connections_in[x, y] > 0:
                     for path_index in range(0, len(paths)):
                         path = paths[path_index]
+                        value_key = list(values_in.keys())[path_index]
                         for i in range(0, len(path) - 2):
                             if path[i] == x and path[i + 1] == y:
-                                connections_out[x, y] += values_in[path_index]
-                        for i in range(len(path) - 1, 1, -1):
-                            if path[i] == x and path[i - 1] == y:
-                                connections_out[x, y] += values_in[path_index]
+                                connections_out[x, y] += values_in[value_key]
+        connections_out = np.maximum( connections_out, connections_out.transpose())
         return connections_out
 
-    return values
+    return path_sum(connections, paths, values)
 
 
 class ExampleNetwork1:
