@@ -59,10 +59,9 @@ def graph_traversal_sum(values_in, connections_in, nodes_start, nodes_end):
                 if connections_in[x, y] > 0:
                     for path_index in range(0, len(paths)):
                         path = paths[path_index]
-                        value_key = list(values_in.keys())[path_index]
                         for i in range(0, len(path) - 2):
                             if path[i] == x and path[i + 1] == y:
-                                connections_out[x, y] += values_in[value_key]
+                                connections_out[x, y] += values_in[x, y]
         connections_out = np.maximum( connections_out, connections_out.transpose())
         return connections_out
 
@@ -90,7 +89,6 @@ class ExampleNetwork1:
     nodes = set(range(0, 10))
     nodes_start = {0, 1, 2, 3}
     nodes_end = {9}
-    values_in = {0: 1, 1: 5, 2: 3, 3: 2}
     connections = np.array([
        # 0  1  2  3  4  5  6  7  8  9
         [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],  # 0
