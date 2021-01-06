@@ -24,18 +24,23 @@ def graph_traversal_sum(values_in, connections_in, nodes_start, nodes_end):
 
     # ToDo: Write your code here, calculating the graph traversal sum
 
-    def sink_path(connections_in, node_start, nodes_start, node_end, path=None):
+    def sink_path(connections_in, node_start, nodes_start, node_end, path=None, last_junction=None):
         path = path if path else [node_start]
         nodes_length = len(connections_in[node_start])
         next_node = [x for x in range(0, nodes_length) if connections_in[path[-1], x] == 1 and x not in nodes_start]
+        if len(next_node) > 1:
+            last_junction = path[-1]
         for node in next_node:
             if node not in path:
                 path.append(node)
                 if node == node_end:
                     return path
-                path = sink_path(connections_in, node_start, nodes_start, node_end, path)
+                path = sink_path(connections_in, node_start, nodes_start, node_end, path, last_junction)
         if not next_node:
-            path = path[:-1]
+            index = len(path) - 1
+            if last_junction is not None:
+                path.index(last_junction)
+            path = path[0:index]
         return path
 
     return values
