@@ -11,12 +11,12 @@ INCLUDE_OPTIONAL_ASSIGNMENT = True
 
 
 def graph_traversal_sum(values_in, connections_in, nodes_start, nodes_end):
-    """ ToDo: Write a docstring
-    :param values_in:
-    :param connections_in:
-    :param nodes_start:
-    :param nodes_end:
-    :return:
+    """ calculates the graph traversal sum for a given graph and input values
+    :param values_in: Initial values of the each starting node or sink
+    :param connections_in: Defines how each node is connected to other
+    :param nodes_start: Specifies the sink points from the rest of the nodes
+    :param nodes_end: Specifies the source from the rest of the nodes
+    :return: A matrix with the graph traversal sum
     """
     # Make sure that original objects are not changed
     values = values_in.copy()
