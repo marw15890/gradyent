@@ -44,6 +44,26 @@ def graph_traversal_sum(values_in, connections_in, nodes_start, nodes_end):
             path = path[0:index]
         return path
 
+    paths = []
+    for node in nodes_start:
+        paths.append(sink_path(connections, node, nodes_start, node_end))
+
+    def path_sum(connections_in, paths, values_in):
+        nodes_length = len(connections_in[0])
+        connections_out = np.zeros(shape=(nodes_length, nodes_length))
+        for x in range(0, nodes_length):
+            for y in range(0, nodes_length):
+                if connections_in[x, y] > 0:
+                    for path_index in range(0, len(paths)):
+                        path = paths[path_index]
+                        for i in range(0, len(path) - 2):
+                            if path[i] == x and path[i + 1] == y:
+                                connections_out[x, y] += values_in[path_index]
+                        for i in range(len(path) - 1, 1, -1):
+                            if path[i] == x and path[i - 1] == y:
+                                connections_out[x, y] += values_in[path_index]
+        return connections_out
+
     return values
 
 
