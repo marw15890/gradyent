@@ -27,17 +27,26 @@ def graph_traversal_sum(values_in, connections_in, nodes_start, nodes_end):
 
     # Function to calculate the path from a given sink to the source    
     def sink_path(connections_in, node_start, nodes_start, node_end, path=None, last_junction=None):
+        # List with the nodes that make the path from node_start until node_end
         path = path if path else [node_start]
+        # Size of the connections matrix
         nodes_length = len(connections_in[node_start])
+        # List of nodes connected to the current node that are not yet in the calculated path and are not sinks
         next_node = [x for x in range(0, nodes_length) if connections_in[path[-1], x] == 1 and x not in nodes_start and x not in path]
+        # Last node in the path that is a junction (intersection of more than 2 nodes)
         if len(next_node) > 1:
             last_junction = path[-1]
+        # Iterate over all possible connections from the current node
         for node in next_node:
             if node not in path:
+                # Add (temporarily) the next possible node in the path
                 path.append(node)
                 if node == node_end:
+                    # Source, end of path
                     return path
+                # Calculate path again from current node
                 path = sink_path(connections_in, node_start, nodes_start, node_end, path, last_junction)
+        # The next possible node is a sink, this path is not valid, remove all nodes in the path from the last junction
         if not next_node:
             index = len(path) - 1
             if last_junction is not None:
@@ -52,16 +61,24 @@ def graph_traversal_sum(values_in, connections_in, nodes_start, nodes_end):
 
     # Function to sum up the node values of all paths in the graph
     def path_sum(connections_in, paths, values_in):
+        # Size of the connections matrix
         nodes_length = len(connections_in[0])
+        # Matrix with the output graph traversal sum
         connections_out = np.zeros(shape=(nodes_length, nodes_length))
+        # Iterate over all elements in the matrix and add the initial values for every path for every node
         for x in range(0, nodes_length):
             for y in range(0, nodes_length):
+                # If the given element of connections_in is not zero, is a node of the graph
                 if connections_in[x, y] > 0:
+                    # Iterate over all paths
                     for path_index in range(0, len(paths)):
                         path = paths[path_index]
                         for i in range(0, len(path) - 2):
+                            # Check if the current element of the matrix is part of the current path
                             if path[i] == x and path[i + 1] == y:
+                                # Add the value coming from the corresponding path
                                 connections_out[x, y] += values_in[x, y]
+        # The matrix is symmetric, add the transpose of the calculated matrix
         connections_out = np.maximum( connections_out, connections_out.transpose())
         return connections_out
 
